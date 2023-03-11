@@ -1,4 +1,4 @@
-package entity;
+package pro.sky.telegrambot.entity;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -49,5 +49,15 @@ public class Task {
 
     public void setDataTime(LocalDateTime dataTime) {
         this.dataTime = dataTime;
+    }
+
+    @Override
+    public String toString() {
+        return "Task{" +
+                "id=" + id +
+                ", chatId=" + chatId +
+                ", textNotification='" + textNotification + '\'' +
+                ", dataTime=" + dataTime +
+                '}';
     }
 }
