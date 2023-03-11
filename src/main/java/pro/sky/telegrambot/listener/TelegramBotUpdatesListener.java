@@ -5,9 +5,10 @@ import com.pengrad.telegrambot.UpdatesListener;
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.request.SendMessage;
 import com.pengrad.telegrambot.response.SendResponse;
+import liquibase.pro.packaged.L;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import pro.sky.telegrambot.entity.Task;
 import pro.sky.telegrambot.repository.TaskRepository;
@@ -39,6 +40,16 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
         telegramBot.setUpdatesListener(this);
     }
 
+    @Scheduled(cron = "0 0/1 * * * *")
+    public void run() {
+        Task task = new Task();
+        task.setChatId(1093494995);
+        LocalDateTime localDateTime = LocalDateTime.now().plusMinutes(1);
+        task.setDateTime(localDateTime);
+        task.setTextNotification("+1");
+        taskRepository.save(task);
+    }
+
     @Override
     public int process(List<Update> updates) {
         updates.forEach(update -> {
@@ -56,7 +67,8 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
                 task.setChatId(update.message().chat().id());
                 task.setTextNotification(notification);
                 LocalDateTime localDateTime = LocalDateTime.parse(date, DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm"));
-                task.setDataTime(localDateTime);
+                task.setDateTime(localDateTime);
+                System.out.println(localDateTime);
                 taskRepository.save(task);
             }
         });

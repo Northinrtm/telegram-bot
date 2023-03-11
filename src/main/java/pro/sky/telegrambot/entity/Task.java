@@ -4,6 +4,7 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
+@Table(name = "notification_task")
 public class Task {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -16,8 +17,8 @@ public class Task {
     @Column(name = "notification", nullable = false)
     private String textNotification;
 
-    @Column(name = "data_time")
-    private LocalDateTime dataTime;
+    @Column(name = "date_time")
+    private LocalDateTime dateTime;
 
     public long getId() {
         return id;
@@ -43,12 +44,12 @@ public class Task {
         this.textNotification = textNotification;
     }
 
-    public LocalDateTime getDataTime() {
-        return dataTime;
+    public LocalDateTime getDateTime() {
+        return dateTime;
     }
 
-    public void setDataTime(LocalDateTime dataTime) {
-        this.dataTime = dataTime;
+    public void setDateTime(LocalDateTime dataTime) {
+        this.dateTime = dataTime;
     }
 
     @Override
@@ -57,7 +58,7 @@ public class Task {
                 "id=" + id +
                 ", chatId=" + chatId +
                 ", textNotification='" + textNotification + '\'' +
-                ", dataTime=" + dataTime +
+                ", dataTime=" + dateTime +
                 '}';
     }
 }
