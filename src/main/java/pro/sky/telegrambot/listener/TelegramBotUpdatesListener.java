@@ -16,6 +16,7 @@ import pro.sky.telegrambot.repository.TaskRepository;
 import javax.annotation.PostConstruct;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -38,16 +39,6 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
     @PostConstruct
     public void init() {
         telegramBot.setUpdatesListener(this);
-    }
-
-    @Scheduled(cron = "0 0/1 * * * *")
-    public void run() {
-        Task task = new Task();
-        task.setChatId(1093494995);
-        LocalDateTime localDateTime = LocalDateTime.now().plusMinutes(1);
-        task.setDateTime(localDateTime);
-        task.setTextNotification("+1");
-        taskRepository.save(task);
     }
 
     @Override
@@ -73,5 +64,14 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
             }
         });
         return UpdatesListener.CONFIRMED_UPDATES_ALL;
+    }
+
+    @Scheduled(cron = "0 0/1 * * * *")
+    public void run() {
+        List<Task> taskList = taskRepository.findTaskByDateTime(LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES));
+        for (Task t : taskList) {
+            SendMessage message = new SendMessage(t.getChatId(), t.getTextNotification());
+            SendResponse response = telegramBot.execute(message);
+        }
     }
 }
